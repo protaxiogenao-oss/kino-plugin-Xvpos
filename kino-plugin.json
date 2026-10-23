@@ -1,0 +1,161 @@
+{
+  "id": "xvideos",
+  "name": "XVideos",
+  "version": "1.5.0",
+  "apiVersion": 6,
+  "entry": "plugin.js",
+  "description": "Videos adultos de xvideos.com. Solo +18. Home reordenado, miniaturas 16:9, búsqueda mejorada. Cuenta opcional para favoritos.",
+  "author": "community",
+  "homepage": "https://github.com/yumehotaru41-rgb/kino-plugin-Xvideos-",
+  "icon": "icon.png",
+  "hosts": [
+    "www.xvideos.com",
+    "xvideos.com",
+    "*.xvideos.com",
+    "*.xvideos-cdn.com",
+    "cdn77-vid.xvideos-cdn.com",
+    "thumb-cdn77.xvideos-cdn.com",
+    "thumbs-gcore.xvideos-cdn.com",
+    "mp4-cdn77.xvideos-cdn.com",
+    "hls-cdn77.xvideos-cdn.com",
+    "assets-cdn77.xvideos-cdn.com"
+  ],
+  "streamHosts": "any",
+  "capabilities": [
+    "search",
+    "home",
+    "browse",
+    "resolve"
+  ],
+  "color": "#C8102E",
+  "categories": [
+    "adult"
+  ],
+  "settings": [
+    {
+      "key": "account",
+      "label": "Cuenta (opcional)",
+      "type": "section",
+      "hint": "Para ver favoritos y playlists en el Inicio"
+    },
+    {
+      "key": "email",
+      "label": "Correo o usuario",
+      "type": "text",
+      "hint": "El login de xvideos.com"
+    },
+    {
+      "key": "password",
+      "label": "Contraseña",
+      "type": "password"
+    },
+    {
+      "key": "status",
+      "label": "Estado",
+      "type": "status"
+    },
+    {
+      "key": "login",
+      "label": "Iniciar sesión",
+      "type": "action",
+      "confirm": "¿Conectar con tu cuenta de XVideos?"
+    },
+    {
+      "key": "logout",
+      "label": "Cerrar sesión",
+      "type": "action",
+      "confirm": "¿Cerrar la sesión y borrar cookies?"
+    },
+    {
+      "key": "playback",
+      "label": "Reproducción",
+      "type": "section"
+    },
+    {
+      "key": "quality",
+      "label": "Calidad preferida",
+      "type": "select",
+      "default": "hls",
+      "options": [
+        {
+          "value": "high",
+          "label": "Alta (MP4 / HLS)"
+        },
+        {
+          "value": "low",
+          "label": "Baja (ahorro de datos)"
+        },
+        {
+          "value": "hls",
+          "label": "Solo HLS"
+        }
+      ]
+    },
+    {
+      "key": "sort",
+      "label": "Orden de búsqueda",
+      "type": "select",
+      "default": "relevance",
+      "options": [
+        {
+          "value": "relevance",
+          "label": "Relevancia"
+        },
+        {
+          "value": "uploaddate",
+          "label": "Más recientes"
+        },
+        {
+          "value": "rating",
+          "label": "Mejor valorados"
+        },
+        {
+          "value": "views",
+          "label": "Más vistos"
+        },
+        {
+          "value": "length",
+          "label": "Más largos"
+        }
+      ]
+    },
+    {
+      "key": "duration",
+      "label": "Duración",
+      "type": "select",
+      "default": "allduration",
+      "options": [
+        {
+          "value": "allduration",
+          "label": "Cualquiera"
+        },
+        {
+          "value": "1-3min",
+          "label": "1–3 min"
+        },
+        {
+          "value": "3-10min",
+          "label": "3–10 min"
+        },
+        {
+          "value": "10min_more",
+          "label": "Más de 10 min"
+        },
+        {
+          "value": "10-20min",
+          "label": "10–20 min"
+        },
+        {
+          "value": "20min_more",
+          "label": "Más de 20 min"
+        }
+      ]
+    },
+    {
+      "key": "onlyHd",
+      "label": "Solo HD en búsqueda",
+      "type": "toggle",
+      "default": false
+    }
+  ]
+}
