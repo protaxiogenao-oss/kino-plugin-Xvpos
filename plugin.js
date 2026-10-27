@@ -149,7 +149,10 @@ function parseVideoCards(html) {
   const items = [];
   const seen = new Set();
   const starts = [];
-  const startRe = /<div[^>]*\bid="video_([a-zA-Z0-9._-]+)"[^>]*>/gi;
+  // Home / categories: id="video_XXXX"
+  // /best and some listings: id="video-thumb-XXXX" (hyphen, not underscore)
+  const startRe =
+    /<div[^>]*\bid="video(?:-thumb)?[_-]([a-zA-Z0-9._-]+)"[^>]*>/gi;
   let sm;
   while ((sm = startRe.exec(html)) !== null) {
     starts.push({ id: sm[1], index: sm.index });
@@ -164,7 +167,9 @@ function parseVideoCards(html) {
 
     let title = "";
     const titleAttr =
-      /<p[^>]*class="[^"]*title[^"]*"[^>]*>[\s\S]*?<a[^>]*title="([^"]+)"/i.exec(block) ||
+      /<p[^>]*class="[^"]*title[^"]*"[^>]*>[\s\S]*?<a[^>]*title="([^"]+)"/i.exec(
+        block
+      ) ||
       /<a[^>]*href="\/video\.[^"]*"[^>]*title="([^"]+)"/i.exec(block) ||
       /title="([^"]{4,200})"/i.exec(block);
     if (titleAttr) title = normalizeTitle(titleAttr[1]);
@@ -601,23 +606,33 @@ export async function home() {
   const rows = [];
   // maxHomeRows = 20, maxRowItems = 60
   const ROW_MAX = 60;
+  // Videos already shown in an earlier row (avoid repeated titles across Home)
+  const seenIds = new Set();
 
+  // Category IDs verified 2026-10 against xvideos.com homepage.
+  // /c/Japanese-27 is Interracial (wrong); Japanese is /tags/japanese only.
+  // Amateur-13 / Teen-15 / Anal-25 were outdated → Amateur-65 / Teen-13 / Anal-12.
   const sections = [
     { id: "fresh", title: "Recientes", path: "/" },
     { id: "best", title: "Mejor valorados", path: "/best" },
     { id: "asian", title: "Asian", path: "/c/Asian_Woman-32" },
-    { id: "japanese", title: "Japanese", path: "/c/Japanese-27" },
+    { id: "japanese", title: "Japanese", path: "/tags/japanese" },
     { id: "latina", title: "Latina", path: "/c/Latina-16" },
     { id: "big-tits", title: "Big Tits", path: "/c/Big_Tits-23" },
     { id: "big-ass", title: "Big Ass", path: "/c/Big_Ass-24" },
     { id: "milf", title: "MILF", path: "/c/Milf-19" },
-    { id: "amateur", title: "Amateur", path: "/c/Amateur-13" },
-    { id: "teen", title: "Teen", path: "/c/Teen-15" },
-    { id: "anal", title: "Anal", path: "/c/Anal-25" },
+    { id: "amateur", title: "Amateur", path: "/c/Amateur-65" },
+    { id: "teen", title: "Teen", path: "/c/Teen-13" },
+    { id: "anal", title: "Anal", path: "/c/Anal-12" },
     { id: "cosplay", title: "Cosplay", path: "/tags/cosplay" },
     { id: "uncensored", title: "Uncensored", path: "/tags/uncensored" },
     { id: "hentai", title: "Hentai", path: "/tags/hentai" },
-    { id: "japanese-tag", title: "Japanese (tag)", path: "/tags/japanese" },
+    { id: "black", title: "Black", path: "/c/Black_Woman-30" },
+    { id: "creampie", title: "Creampie", path: "/c/Creampie-40" },
+    { id: "lesbian", title: "Lesbian", path: "/c/Lesbian-26" },
+    { id: "blonde", title: "Blonde", path: "/c/Blonde-20" },
+    { id: "pov", title: "POV", path: "/tags/pov" },
+    { id: "squirting", title: "Squirting", path: "/c/Squirting-56" },
   ];
 
   if (typeof hasCredentials === "function" && hasCredentials()) {
@@ -631,12 +646,19 @@ export async function home() {
         const accRows = await fetchAccountLists();
         for (const row of accRows) {
           if (row && row.items && row.items.length) {
-            rows.push({
-              id: row.id,
-              title: row.title,
-              items: row.items.slice(0, ROW_MAX),
-              ref: row.ref,
+            const unique = row.items.filter(function (it) {
+              if (!it || !it.id || seenIds.has(it.id)) return false;
+              seenIds.add(it.id);
+              return true;
             });
+            if (unique.length) {
+              rows.push({
+                id: row.id,
+                title: row.title,
+                items: unique.slice(0, ROW_MAX),
+                ref: row.ref,
+              });
+            }
           }
         }
       }
@@ -650,12 +672,20 @@ export async function home() {
     try {
       const r = await fetchPage(sec.path);
       if (!r.ok) continue;
-      const cards = parseVideoCards(r.text());
+      let cards = parseVideoCards(r.text());
       if (!cards.length) continue;
+      // Drop videos already used in earlier rows
+      cards = cards.filter(function (c) {
+        if (!c.id || seenIds.has(c.id)) return false;
+        return true;
+      });
+      if (cards.length < 6) continue;
+      const slice = cards.slice(0, ROW_MAX);
+      for (let i = 0; i < slice.length; i++) seenIds.add(slice[i].id);
       rows.push({
         id: sec.id,
         title: sec.title,
-        items: cards.slice(0, ROW_MAX).map(toItem),
+        items: slice.map(toItem),
         ref: sec.path.replace(/^\//, "") || "fresh",
       });
     } catch (e) {
