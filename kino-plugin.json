@@ -1,11 +1,11 @@
 {
   "id": "xvideos",
   "name": "XVideos",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "apiVersion": 6,
   "entry": "plugin.js",
-  "description": "Videos adultos de xvideos.com. Solo +18. Categorías actualizadas 2026, /best reparado, filas sin repetidos.",
-  "author": "community",
+  "description": "Hecho por Hotaru Yume. Videos adultos de xvideos.com. Solo +18.",
+  "author": "Hotaru Yume",
   "homepage": "https://github.com/yumehotaru41-rgb/kino-plugin-Xvideos-",
   "icon": "icon.png",
   "hosts": [
