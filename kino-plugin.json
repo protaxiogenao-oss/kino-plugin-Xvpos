@@ -4,9 +4,10 @@
   "version": "1.6.1",
   "apiVersion": 6,
   "entry": "plugin.js",
-  "description": "Hecho por Hotaru Yume. Videos adultos de xvideos.com. Solo +18.",
+  "description": "Videos adultos de xvideos.com. Extenso catalogo y busquedas. Solo +18.",
   "author": "Hotaru Yume",
-  "homepage": "https://github.com/yumehotaru41-rgb/kino-plugin-Xvideos-",
+  "creator": "hotaruyume",
+  "homepage": "https://www.xvideos.com/",
   "icon": "icon.png",
   "hosts": [
     "www.xvideos.com",
